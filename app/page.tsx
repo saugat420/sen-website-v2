@@ -41,10 +41,6 @@ export default function Home() {
           <Image src="/sen-logo.png" alt="" width={48} height={48} priority />
           <span>Spoken English Nepal</span>
         </a>
-        <nav aria-label="Main navigation">
-          <a href="#challenges">The struggle</a>
-          <a href="#program">The program</a>
-        </nav>
         <a className="button button-small" href="#enquire">Enquire now</a>
       </header>
 

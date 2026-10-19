@@ -23,7 +23,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .site-header { width: min(1240px, calc(100% - 28px)); min-height: 76px; margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 14px; border-bottom: 1px solid var(--line); }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 800; line-height: 1.15; letter-spacing: -0.01em; }
 .brand img { width: 42px; height: 42px; object-fit: contain; flex: 0 0 auto; }
-.site-header nav { display: none; }
 
 .button { min-height: 52px; border: 0; border-radius: 14px; padding: 13px 19px; display: inline-flex; align-items: center; justify-content: center; gap: 12px; font-weight: 800; line-height: 1.2; cursor: pointer; transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease; }
 .button:hover { transform: translateY(-2px); }
@@ -154,8 +153,6 @@ footer p { margin: 0; color: var(--muted); font-size: 14px; }
   .section { width: min(1180px, calc(100% - 64px)); }
   .site-header { width: min(1240px, calc(100% - 64px)); min-height: 86px; }
   .brand { font-size: 17px; }
-  .site-header nav { display: flex; gap: 28px; margin-left: auto; font-size: 15px; font-weight: 700; }
-  .site-header nav a:hover { color: var(--blue); }
   .hero { grid-template-columns: 1.02fr .98fr; align-items: center; min-height: 620px; padding-block: 62px; }
   .hero h1 { font-size: clamp(52px, 7vw, 82px); }
   .section-heading h2, .program-heading h2, .enquiry-intro h2 { font-size: clamp(44px, 6vw, 58px); }
