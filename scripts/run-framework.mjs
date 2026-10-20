@@ -6,6 +6,18 @@ const [command, ...args] = process.argv.slice(2);
 if (!["dev", "build"].includes(command)) throw new Error("Expected dev or build.");
 const managedLinux = readExecutionProfile() === "managed-linux";
 
+// Vercel expects a standard Next.js `.next` build, including
+// `.next/routes-manifest.json`. The Sites deployment continues to use Vinext.
+if (process.env.VERCEL) {
+  const nextCli = fileURLToPath(new URL("../node_modules/next/dist/bin/next", import.meta.url));
+  const result = spawnSync(process.execPath, [nextCli, command, ...args], {
+    stdio: "inherit",
+    env: process.env,
+  });
+  if (result.error) throw result.error;
+  process.exit(result.status ?? 1);
+}
+
 if (managedLinux && command === "build") {
   const result = spawnSync("bash", [
     fileURLToPath(new URL("./build-verified.sh", import.meta.url)), ...args,

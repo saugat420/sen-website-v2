@@ -1,4 +1,3 @@
-import { env } from "cloudflare:workers";
 import { z } from "zod";
 
 const levels = [
@@ -39,9 +38,9 @@ const enquirySchema = z.object({
 const safeCell = (value: string) => /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
 
 export async function POST(request: Request) {
-  const webhookUrl = env.GOOGLE_SHEETS_WEBHOOK_URL;
-  const webhookSecret = env.GOOGLE_SHEETS_WEBHOOK_SECRET;
-  const supportNumber = env.WHATSAPP_SUPPORT_NUMBER?.replace(/\D/g, "");
+  const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+  const webhookSecret = process.env.GOOGLE_SHEETS_WEBHOOK_SECRET;
+  const supportNumber = process.env.WHATSAPP_SUPPORT_NUMBER?.replace(/\D/g, "");
 
   if (!webhookUrl || !webhookSecret || !supportNumber) {
     return Response.json({ error: "Enquiries are not open yet. Please check back soon." }, { status: 503 });
