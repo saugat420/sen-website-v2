@@ -7,6 +7,21 @@ export async function GET(request: Request) {
     return Response.json({ error: "Not authorised" }, { status: 401 });
   }
 
+  const backendUrl = process.env.ENQUIRY_BACKEND_URL;
+  if (backendUrl) {
+    try {
+      const healthUrl = new URL("/api/enquiries/health", backendUrl);
+      const response = await fetch(healthUrl, {
+        headers: { "x-sen-backend-secret": expected },
+        signal: AbortSignal.timeout(20_000),
+      });
+      const result = await response.json();
+      return Response.json(result, { status: response.status });
+    } catch {
+      return Response.json({ error: "Enquiry services are not ready" }, { status: 503 });
+    }
+  }
+
   try {
     const { ensureSheetReady, verifyEmailConnection } = await import("@/lib/enquiry-service");
     await ensureSheetReady();
