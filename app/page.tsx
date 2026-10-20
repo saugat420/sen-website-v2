@@ -62,15 +62,23 @@ export default function Home() {
           <Image src="/sen-logo.png" alt="" width={48} height={48} priority />
           <span>Spoken English Nepal</span>
         </a>
-        <nav aria-label="Main navigation">
+        <nav className="desktop-nav" aria-label="Main navigation">
           <a href="#how-it-works">How It Works</a>
           <a href="#faq">FAQs</a>
         </nav>
-        <a className="button button-small" href="#enquire">Get Program Details</a>
+        <a className="button button-small desktop-cta" href="#enquire">Get Program Details</a>
+        <details className="mobile-menu">
+          <summary aria-label="Open navigation menu"><span className="menu-icon" aria-hidden="true" /><span className="sr-only">Menu</span></summary>
+          <nav className="mobile-menu-panel" aria-label="Mobile navigation">
+            <a href="#how-it-works">How It Works</a>
+            <a href="#faq">FAQs</a>
+            <a className="button button-primary" href="#enquire">Get Program Details</a>
+          </nav>
+        </details>
       </header>
 
       <section className="hero section" id="top">
-        <div className="hero-copy">
+        <div className="hero-copy" data-reveal="left">
           <h1>Understand English,<br /><span>but struggle to speak?</span></h1>
           <p className="hero-lede">Build your English confidence through a two-month program with daily live classes and guided speaking practice.</p>
           <div className="hero-actions">
@@ -78,30 +86,30 @@ export default function Home() {
             <a className="text-link" href="#enquire">Ask About the Program <span aria-hidden="true">→</span></a>
           </div>
         </div>
-        <div className="hero-art"><ConversationIllustration /></div>
+        <div className="hero-art" data-reveal="right"><ConversationIllustration /></div>
       </section>
 
-      <div className="trust-strip" aria-label="Our experience and reach">
+      <div className="trust-strip" aria-label="Our experience and reach" data-reveal="up">
         {trustItems.map(({ icon: Icon, label }) => (
           <div className="trust-item" key={label}><Icon aria-hidden="true" /><strong>{label}</strong></div>
         ))}
       </div>
 
       <section className="section challenges" id="challenges">
-        <div className="section-heading">
+        <div className="section-heading" data-reveal="up">
           <p className="eyebrow">Sound familiar?</p>
           <h2>You know what you want to say.<br /><span>But the words don’t come out.</span></h2>
         </div>
         <div className="challenge-grid">
           {challenges.map((challenge, index) => (
-            <article className="challenge-card" key={challenge.title}>
+            <article className="challenge-card" key={challenge.title} data-reveal="up">
               <span className="card-number" aria-hidden="true">0{index + 1}</span>
               <ChallengeIllustration kind={challenge.kind} />
               <h3>{challenge.title}</h3>
             </article>
           ))}
         </div>
-        <div className="reframe">
+        <div className="reframe" data-reveal="up">
           <MessageCircleMore aria-hidden="true" />
           <p>You don’t need to wait for perfect English to start practising.</p>
         </div>
@@ -109,7 +117,7 @@ export default function Home() {
 
       <section className="program-section" id="how-it-works">
         <div className="section program-inner">
-          <div className="program-heading">
+          <div className="program-heading" data-reveal="up">
             <div>
               <p className="eyebrow">2 month program</p>
               <h2>What’s inside the launchpad?</h2>
@@ -119,7 +127,7 @@ export default function Home() {
           </div>
           <div className="benefit-list">
             {benefits.map(({ kind, icon: Icon, title, copy }, index) => (
-              <article className="benefit-row" key={title}>
+              <article className="benefit-row" key={title} data-reveal={index % 2 === 0 ? "left" : "right"}>
                 <div className="benefit-art">{kind === "practice" ? <PracticeIllustration /> : <ProgramIllustration kind={kind} />}</div>
                 <div className="benefit-copy">
                   <span className="benefit-icon"><Icon aria-hidden="true" /></span><span className="benefit-index">0{index + 1}</span>
@@ -132,12 +140,12 @@ export default function Home() {
       </section>
 
       <section className="section details-section" id="program-details">
-        <div className="details-heading">
+        <div className="details-heading" data-reveal="left">
           <p className="eyebrow">The practical details</p>
           <h2>Know what<br />you’re joining.</h2>
           <p>Start with the facts. Ask us about anything that depends on the current batch.</p>
         </div>
-        <div className="details-list">
+        <div className="details-list" data-reveal="right">
           {details.map(({ icon: Icon, label, value }) => (
             <div className="detail-row" key={label}>
               <Icon aria-hidden="true" />
@@ -150,8 +158,8 @@ export default function Home() {
 
       <section className="faq-section" id="faq">
         <div className="section faq-inner">
-          <div className="faq-heading"><p className="eyebrow">Before you enquire</p><h2>Questions are<br />welcome.</h2></div>
-          <div className="faq-list">
+          <div className="faq-heading" data-reveal="left"><p className="eyebrow">Before you enquire</p><h2>Questions are<br />welcome.</h2></div>
+          <div className="faq-list" data-reveal="right">
             {faqs.map(({ question, answer }) => (
               <details key={question}>
                 <summary><span>{question}</span><ChevronDown aria-hidden="true" /></summary>
@@ -163,14 +171,14 @@ export default function Home() {
       </section>
 
       <section className="section enquiry-section" id="enquire">
-        <div className="enquiry-intro">
+        <div className="enquiry-intro" data-reveal="left">
           <p className="eyebrow">Let’s find your next step</p>
           <h2>Want to feel more confident<br /><span>speaking English?</span></h2>
           <p>Tell us where you get stuck. We’ll help you understand the program, fees and available class timings.</p>
           <p className="reassurance"><CheckCircle2 aria-hidden="true" /> This is an enquiry—not a payment or confirmed enrolment.</p>
           <div className="enquiry-doodle" aria-hidden="true"><PracticeIllustration /></div>
         </div>
-        <EnquiryForm />
+        <div data-reveal="right"><EnquiryForm /></div>
       </section>
 
       <footer>
