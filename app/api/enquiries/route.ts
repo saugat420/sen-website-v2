@@ -30,6 +30,17 @@ const enquirySchema = z.object({
   formStartedAt: z.number().int().positive(),
 });
 
+function isSameOriginBrowserRequest(request: Request) {
+  const origin = request.headers.get("origin");
+  const host = request.headers.get("host");
+  if (!origin || !host || request.headers.get("sec-fetch-site") !== "same-origin") return false;
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: Request) {
   let payload: EnquiryPayload;
   try {
@@ -47,7 +58,7 @@ export async function POST(request: Request) {
 
   const suppliedProxySecret = request.headers.get("x-sen-proxy-secret");
   const expectedProxySecret = process.env.ENQUIRY_BACKEND_SECRET;
-  if (!expectedProxySecret || suppliedProxySecret !== expectedProxySecret) {
+  if (!expectedProxySecret || (suppliedProxySecret !== expectedProxySecret && !isSameOriginBrowserRequest(request))) {
     return Response.json({ error: "This enquiry could not be authorised." }, { status: 401 });
   }
 
