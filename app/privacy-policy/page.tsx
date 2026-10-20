@@ -25,12 +25,12 @@ export default function PrivacyPolicy() {
 
         <section>
           <h2>Information we collect</h2>
-          <p>When you send an enquiry, we may collect your name, WhatsApp number, optional email address, English level, selected speaking challenges and basic submission details such as the date and enquiry reference.</p>
+          <p>When you send an enquiry, we may collect your name, WhatsApp number, email address, English level, selected speaking challenges and basic submission details such as the date and enquiry reference.</p>
         </section>
 
         <section>
           <h2>How we use your information</h2>
-          <p>We use this information to respond to your enquiry, understand what support you need and share relevant details about the program, fees, timings and next steps. Submitting the form does not automatically enrol you or subscribe you to promotional messages.</p>
+          <p>We use this information to save and respond to your enquiry, email your confirmation, understand what support you need and share relevant details about the program, fees, timings and next steps. Submitting the form does not automatically enrol you or subscribe you to promotional messages.</p>
         </section>
 
         <section>
@@ -40,7 +40,7 @@ export default function PrivacyPolicy() {
 
         <section>
           <h2>Your choices</h2>
-          <p>You may choose not to provide the optional email address. You can also contact the Spoken English Nepal team through the same channel you used for your enquiry to ask about the personal information you submitted or request its correction or deletion.</p>
+          <p>You can contact the Spoken English Nepal team through the same channel you used for your enquiry to ask about the personal information you submitted or request its correction or deletion.</p>
         </section>
 
         <section>

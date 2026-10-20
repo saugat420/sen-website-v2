@@ -92,7 +92,7 @@ export function EnquiryForm() {
       if (!/^\+[1-9]\d{7,14}$/.test(normalizedPhone(form))) return form.countryCode === "other"
         ? "Enter your full WhatsApp number with country code, for example +44 7700 900000."
         : "Enter a valid WhatsApp number. You can also type a full international number beginning with +.";
-      if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return "Please enter a valid email address or leave it blank.";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return "Please enter a valid email address so we can send your confirmation.";
     }
     if (currentStep === 2) {
       if (!form.level) return "Please choose the option that best describes your English.";
@@ -157,7 +157,7 @@ export function EnquiryForm() {
       {step === 1 && (
         <fieldset>
           <legend><span ref={headingRef} tabIndex={-1}>Let’s start with you.</span></legend>
-          <p className="form-hint">We’ll use these details only to respond to your enquiry.</p>
+          <p className="form-hint">We’ll use these details to respond and send your enquiry confirmation.</p>
           <label className="field-label"><span><UserRound aria-hidden="true" /> Your name <b aria-hidden="true">*</b></span><input autoComplete="name" value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Full name" required /></label>
           <div className="field-label">
             <span><Phone aria-hidden="true" /> WhatsApp number <b aria-hidden="true">*</b></span>
@@ -170,7 +170,7 @@ export function EnquiryForm() {
             </div>
             <small>Enter your local number, or type a full international number beginning with +.</small>
           </div>
-          <label className="field-label"><span><Mail aria-hidden="true" /> Email address <em>Optional</em></span><input type="email" autoComplete="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="you@example.com" /></label>
+          <label className="field-label"><span><Mail aria-hidden="true" /> Email address <b aria-hidden="true">*</b></span><input type="email" autoComplete="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="you@example.com" required /></label>
           <label className="honeypot" aria-hidden="true">Website<input tabIndex={-1} autoComplete="off" value={form.website} onChange={(e) => update("website", e.target.value)} /></label>
         </fieldset>
       )}
@@ -184,8 +184,8 @@ export function EnquiryForm() {
           <div className="question-group"><h4>What would you like help with?</h4><p className="select-hint">Select all that apply.</p><div className="choice-list compact">
             {challenges.map((option) => <Choice key={option} type="checkbox" name="challenges" value={option} checked={form.challenges.includes(option)} onChange={() => toggleChallenge(option)} />)}
           </div></div>
-          <p className="submission-note">We’ll save your enquiry first. WhatsApp will then open with your answers ready—tap Send to share them with our team.</p>
-          <p className="privacy-note">We’ll use your details to respond to your enquiry about the program.</p>
+          <p className="submission-note">We’ll save your enquiry and email your confirmation first. WhatsApp will then open with your answers ready—tap Send to share them with our team.</p>
+          <p className="privacy-note">We’ll use your details only to respond to your enquiry about the program.</p>
         </fieldset>
       )}
 
