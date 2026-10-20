@@ -32,9 +32,9 @@ const challenges = [
 ];
 
 const benefits = [
-  { kind: "class" as const, icon: Video, title: "Daily live classes", copy: "Learn useful English for everyday conversations." },
-  { kind: "practice" as const, icon: MessageCircleMore, title: "Daily speaking practice", copy: "Put what you learn into words instead of only watching lessons." },
-  { kind: "assignment" as const, icon: ClipboardCheck, title: "Daily assignments", copy: "Keep practising between classes and build a consistent habit." },
+  { kind: "class" as const, icon: Video, title: "Daily live classes", copy: "Join your trainer on Zoom for step-by-step lessons five days a week. Live classes run every day except Wednesday and Saturday." },
+  { kind: "practice" as const, icon: MessageCircleMore, title: "Daily speaking practice", copy: "Use what you learn by speaking with other members in a supportive, judgement-free session. Speak freely, make mistakes and keep building fluency." },
+  { kind: "assignment" as const, icon: ClipboardCheck, title: "Daily assignments", copy: "Complete a short five-to-ten-minute task each day. Small, consistent practice helps turn what you learn into a lasting habit." },
 ];
 
 const details = [
@@ -71,14 +71,12 @@ export default function Home() {
 
       <section className="hero section" id="top">
         <div className="hero-copy">
-          <p className="eyebrow">English Fluency Launchpad</p>
           <h1>Understand English,<br /><span>but struggle to speak?</span></h1>
           <p className="hero-lede">Build your English confidence through a two-month program with daily live classes and guided speaking practice.</p>
           <div className="hero-actions">
             <a className="button button-primary" href="#how-it-works">See How the Program Works <span aria-hidden="true">↓</span></a>
             <a className="text-link" href="#enquire">Ask About the Program <span aria-hidden="true">→</span></a>
           </div>
-          <p className="hero-note"><span aria-hidden="true">●</span> Live online learning. Daily speaking practice.</p>
         </div>
         <div className="hero-art"><ConversationIllustration /></div>
       </section>
@@ -105,7 +103,7 @@ export default function Home() {
         </div>
         <div className="reframe">
           <MessageCircleMore aria-hidden="true" />
-          <p>You don’t need to wait for perfect English<br className="desktop-break" /> to start practising.</p>
+          <p>You don’t need to wait for perfect English to start practising.</p>
         </div>
       </section>
 
@@ -113,8 +111,8 @@ export default function Home() {
         <div className="section program-inner">
           <div className="program-heading">
             <div>
-              <p className="eyebrow">A simple daily routine</p>
-              <h2>Learn it. Speak it.<br /><span>Practise it.</span></h2>
+              <p className="eyebrow">2 month program</p>
+              <h2>What’s inside the launchpad?</h2>
               <p className="section-intro">English Fluency Launchpad gives you a regular place to learn and practise speaking over two months.</p>
             </div>
             <div className="duration"><CalendarDays aria-hidden="true" /><span>A two-month<br /><strong>speaking program</strong></span></div>
@@ -177,7 +175,13 @@ export default function Home() {
 
       <footer>
         <a className="brand" href="#top"><Image src="/sen-logo.png" alt="" width={44} height={44} /><span>Spoken English Nepal</span></a>
-        <p>© {new Date().getFullYear()} Spoken English Nepal</p>
+        <div className="footer-meta">
+          <nav className="footer-links" aria-label="Policies">
+            <a href="/refund-policy">Refund Policy</a>
+            <a href="/privacy-policy">Privacy Policy</a>
+          </nav>
+          <p>© {new Date().getFullYear()} Spoken English Nepal</p>
+        </div>
       </footer>
     </main>
   );
