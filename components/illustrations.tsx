@@ -7,13 +7,13 @@ export function ConversationIllustration() {
   return (
     <svg className="illustration hero-illustration" viewBox="0 0 560 430" role="img" aria-labelledby="conversation-title conversation-desc">
       <title id="conversation-title">Two people enjoying an English conversation</title>
-      <desc id="conversation-desc">Two friendly stick figures encourage each other to practise and speak English.</desc>
+      <desc id="conversation-desc">One learner says they want to speak English fluently, and a friend says that is why we have SEN.</desc>
       <path className="accent-shape" d="M69 338C15 242 49 114 154 55c116-65 268-41 336 59 68 99 22 226-85 277-98 47-275 37-336-53Z" />
       <path className="scribble" d="M82 386c128 20 292 19 401-9" />
       <g><circle cx="189" cy="172" r="55" {...face} /><circle cx="172" cy="164" r="4" /><circle cx="207" cy="164" r="4" /><path d="M170 190c14 12 29 12 42-1M187 228v82m0-56-46 35m48-30 44 24m-46 26-30 70m31-69 40 65" {...face} fill="none" /><path d="M137 286c-5-18-3-34 5-48m-15 9 15-9 2 17" {...face} fill="none" /></g>
       <g><circle cx="369" cy="174" r="55" {...face} /><circle cx="352" cy="165" r="4" /><circle cx="386" cy="165" r="4" /><path d="M351 190c13 12 29 12 41-1M367 230v81m0-54-48 23m49-26 51 31m-52 25-39 66m40-65 28 68M418 284c14-14 20-29 18-46m-8 4 9-6 7 14" {...face} fill="none" /></g>
-      <g className="speech-bubble speech-left"><path d="M57 76h113c17 0 30 13 30 30v22c0 17-13 30-30 30h-48l-23 22 2-22H57c-17 0-30-13-30-30v-22c0-17 13-30 30-30Z" /><text x="113" y="124" textAnchor="middle">Let’s practise!</text></g>
-      <g className="speech-bubble speech-right"><path d="M384 47h120c17 0 30 13 30 30v24c0 17-13 30-30 30h-41l-2 23-22-23h-55c-17 0-30-13-30-30V77c0-17 13-30 30-30Z" /><text x="444" y="96" textAnchor="middle">I can speak!</text></g>
+      <g className="speech-bubble speech-left"><path d="M57 76h113c17 0 30 13 30 30v22c0 17-13 30-30 30h-48l-23 22 2-22H57c-17 0-30-13-30-30v-22c0-17 13-30 30-30Z" /><text className="speech-long" x="113" textAnchor="middle"><tspan x="113" y="108">I want to speak</tspan><tspan x="113" y="130">English fluently.</tspan></text></g>
+      <g className="speech-bubble speech-right"><path d="M384 47h120c17 0 30 13 30 30v24c0 17-13 30-30 30h-41l-2 23-22-23h-55c-17 0-30-13-30-30V77c0-17 13-30 30-30Z" /><text className="speech-long" x="444" textAnchor="middle"><tspan x="444" y="80">That’s why we</tspan><tspan x="444" y="102">have SEN.</tspan></text></g>
       <circle className="red-dot" cx="479" cy="238" r="13" /><path className="blue-mark" d="m75 208 19 9m-14-34 12 4" />
     </svg>
   );

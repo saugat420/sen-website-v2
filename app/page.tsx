@@ -82,8 +82,8 @@ export default function Home() {
           <h1>Understand English,<br /><span>but struggle to speak?</span></h1>
           <p className="hero-lede">Build your English confidence through a two-month program with daily live classes and guided speaking practice.</p>
           <div className="hero-actions">
-            <a className="button button-primary" href="#how-it-works">See How the Program Works <span aria-hidden="true">↓</span></a>
-            <a className="text-link" href="#enquire">Ask About the Program <span aria-hidden="true">→</span></a>
+            <a className="button button-primary" href="#how-it-works">Checkout the Program <span aria-hidden="true">↓</span></a>
+            <a className="text-link" href="#enquire">Enquire Now <span aria-hidden="true">→</span></a>
           </div>
         </div>
         <div className="hero-art" data-reveal="right"><ConversationIllustration /></div>
