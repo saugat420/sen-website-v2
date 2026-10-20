@@ -12,7 +12,9 @@ Add these as hosted runtime variables, not in source. Mark the webhook URL and s
 
 The website sends a JSON `POST` only from the server. The receiver must compare `secret` with its server-side secret, check column B for the incoming `enquiryId`, and return existing IDs as successful duplicates without appending. A successful response must be JSON: `{ "ok": true, "enquiryId": "the incoming ID", "duplicate": false }`.
 
-Append these columns in order: submission timestamp, enquiry ID, full name, email address, WhatsApp number, English level, selected challenges, eagerness.
+Append these columns in order: submission timestamp, enquiry ID, full name, email address, WhatsApp number, English level, selected challenges, reserved legacy field.
+
+Email is optional and may be an empty string. The final legacy field is also sent as an empty string so existing eight-column sheets and receivers remain compatible after removal of the eagerness question.
 
 The route reuses the same enquiry ID on retries, sanitizes spreadsheet-formula prefixes, waits for an explicit save confirmation, and only then returns a WhatsApp URL to the browser.
 

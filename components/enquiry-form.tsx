@@ -1,40 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Check, Mail, Phone, UserRound } from "lucide-react";
 
 type FormState = {
   enquiryId: string;
   name: string;
   email: string;
+  countryCode: string;
   phone: string;
   level: string;
   challenges: string[];
-  eagerness: string;
   website: string;
 };
 
 const levels = [
-  "Beginner — I know a few words.",
-  "Basic — I can make simple sentences.",
-  "Intermediate — I understand, but struggle to speak.",
-  "Confident — I want to become more fluent.",
+  "I know a few words.",
+  "I can make simple sentences.",
+  "I understand English, but struggle to speak.",
+  "I can speak, but want to improve.",
 ];
 
 const challenges = [
-  "My mind goes blank.",
-  "I translate in my head.",
-  "I worry about mistakes.",
-  "I struggle to find words.",
-  "I lack confidence.",
-  "I need more speaking practice.",
-  "I struggle with pronunciation.",
+  "Finding the right words.",
+  "Speaking without translating.",
+  "Feeling confident.",
+  "Pronunciation.",
+  "Everyday conversations.",
+  "Speaking at work.",
 ];
 
-const eagernessOptions = [
-  "Just exploring my options.",
-  "Ready to make time for daily practice.",
-  "Very eager — I want to start soon.",
+const countryCodes = [
+  { value: "+977", label: "Nepal (+977)" },
+  { value: "+91", label: "India (+91)" },
+  { value: "+880", label: "Bangladesh (+880)" },
+  { value: "+971", label: "UAE (+971)" },
+  { value: "+974", label: "Qatar (+974)" },
+  { value: "+966", label: "Saudi Arabia (+966)" },
+  { value: "+44", label: "United Kingdom (+44)" },
+  { value: "+1", label: "US / Canada (+1)" },
+  { value: "+61", label: "Australia (+61)" },
+  { value: "other", label: "Other country" },
 ];
 
 const newEnquiryId = () =>
@@ -43,8 +49,16 @@ const newEnquiryId = () =>
     : `sen-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 const emptyForm = (): FormState => ({
-  enquiryId: newEnquiryId(), name: "", email: "", phone: "", level: "", challenges: [], eagerness: "", website: "",
+  enquiryId: newEnquiryId(), name: "", email: "", countryCode: "+977", phone: "", level: "", challenges: [], website: "",
 });
+
+function normalizedPhone(form: FormState) {
+  const raw = form.phone.trim().replace(/[\s()-]/g, "");
+  if (raw.startsWith("+")) return raw;
+  if (form.countryCode === "other") return "";
+  const localDigits = raw.replace(/\D/g, "").replace(/^0/, "");
+  return `${form.countryCode}${localDigits}`;
+}
 
 export function EnquiryForm() {
   const [step, setStep] = useState(1);
@@ -53,6 +67,13 @@ export function EnquiryForm() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<{ whatsappUrl: string } | null>(null);
   const [startedAt] = useState(() => Date.now());
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const hasChangedStep = useRef(false);
+
+  useEffect(() => {
+    if (hasChangedStep.current) headingRef.current?.focus();
+    hasChangedStep.current = true;
+  }, [step]);
 
   const update = (key: keyof FormState, value: string | string[]) => {
     setForm((current) => ({ ...current, [key]: value }));
@@ -68,32 +89,42 @@ export function EnquiryForm() {
   const validateStep = (currentStep: number) => {
     if (currentStep === 1) {
       if (form.name.trim().length < 2) return "Please enter your full name.";
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return "Please enter a valid email address.";
-      if (!/^\+[1-9]\d{7,14}$/.test(form.phone.replace(/[\s()-]/g, ""))) return "Enter your WhatsApp number with country code, for example +977 98XXXXXXXX.";
+      if (!/^\+[1-9]\d{7,14}$/.test(normalizedPhone(form))) return form.countryCode === "other"
+        ? "Enter your full WhatsApp number with country code, for example +44 7700 900000."
+        : "Enter a valid WhatsApp number. You can also type a full international number beginning with +.";
+      if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return "Please enter a valid email address or leave it blank.";
     }
     if (currentStep === 2) {
-      if (!form.level) return "Please choose your English level.";
-      if (form.challenges.length === 0) return "Choose at least one speaking challenge.";
+      if (!form.level) return "Please choose the option that best describes your English.";
+      if (form.challenges.length === 0) return "Choose at least one area you would like help with.";
     }
-    if (currentStep === 3 && !form.eagerness) return "Please tell us how eager you are to improve.";
     return "";
   };
 
-  const continueTo = (nextStep: number) => {
-    const message = validateStep(step);
+  const continueToStepTwo = () => {
+    const message = validateStep(1);
     if (message) { setError(message); return; }
-    setStep(nextStep); setError("");
+    setStep(2); setError("");
   };
 
   const submit = async () => {
-    const message = validateStep(3);
+    const message = validateStep(2);
     if (message) { setError(message); return; }
     setSubmitting(true); setError("");
     try {
       const response = await fetch("/api/enquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, formStartedAt: startedAt }),
+        body: JSON.stringify({
+          enquiryId: form.enquiryId,
+          name: form.name,
+          email: form.email,
+          phone: normalizedPhone(form),
+          level: form.level,
+          challenges: form.challenges,
+          website: form.website,
+          formStartedAt: startedAt,
+        }),
       });
       const result = (await response.json()) as { ok?: boolean; whatsappUrl?: string; error?: string };
       if (!response.ok || !result.ok || !result.whatsappUrl) throw new Error(result.error || "We couldn’t save your enquiry. Please try again.");
@@ -109,62 +140,60 @@ export function EnquiryForm() {
   if (success) return (
     <div className="form-shell success-panel" aria-live="polite">
       <span className="success-icon"><Check aria-hidden="true" /></span>
-      <p className="eyebrow">Enquiry saved</p>
-      <h3>Your answers are ready.</h3>
-      <p>On WhatsApp, tap <strong>Send</strong> to share them with Spoken English Nepal.</p>
-      <a className="button button-primary" href={success.whatsappUrl}>Open WhatsApp</a>
+      <p className="eyebrow">Your enquiry has been saved</p>
+      <h3>Open WhatsApp and tap Send.</h3>
+      <p>Your answers are ready to share with our team.</p>
+      <a className="button button-primary" href={success.whatsappUrl}>Open WhatsApp <span aria-hidden="true">→</span></a>
     </div>
   );
 
   return (
     <form className="form-shell" onSubmit={(event) => event.preventDefault()} noValidate>
       <div className="form-progress">
-        <div><span>Step {step} of 3</span><span>{Math.round((step / 3) * 100)}%</span></div>
-        <div className="progress-track" aria-hidden="true"><span style={{ width: `${(step / 3) * 100}%` }} /></div>
+        <div><span>Step {step} of 2</span><span>{step * 50}%</span></div>
+        <div className="progress-track" aria-hidden="true"><span style={{ width: `${step * 50}%` }} /></div>
       </div>
 
       {step === 1 && (
         <fieldset>
-          <legend>First, let’s meet you.</legend>
-          <p className="form-hint">Tell us where to send program details.</p>
-          <label className="field-label"><span><UserRound aria-hidden="true" /> Your name</span><input autoComplete="name" value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Full name" required /></label>
-          <label className="field-label"><span><Mail aria-hidden="true" /> Email address</span><input type="email" autoComplete="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="you@example.com" required /></label>
-          <label className="field-label"><span><Phone aria-hidden="true" /> WhatsApp number</span><input type="tel" inputMode="tel" autoComplete="tel" value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="+977 98XXXXXXXX" required /></label>
+          <legend><span ref={headingRef} tabIndex={-1}>Let’s start with you.</span></legend>
+          <p className="form-hint">We’ll use these details only to respond to your enquiry.</p>
+          <label className="field-label"><span><UserRound aria-hidden="true" /> Your name <b aria-hidden="true">*</b></span><input autoComplete="name" value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Full name" required /></label>
+          <div className="field-label">
+            <span><Phone aria-hidden="true" /> WhatsApp number <b aria-hidden="true">*</b></span>
+            <div className="phone-fields">
+              <label className="sr-only" htmlFor="country-code">Country code</label>
+              <select id="country-code" value={form.countryCode} onChange={(e) => update("countryCode", e.target.value)} aria-label="Country code">
+                {countryCodes.map((country) => <option value={country.value} key={country.value}>{country.label}</option>)}
+              </select>
+              <input type="tel" inputMode="tel" autoComplete="tel" value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder={form.countryCode === "other" ? "+44 7700 900000" : "98XXXXXXXX"} aria-label="WhatsApp number" required />
+            </div>
+            <small>Enter your local number, or type a full international number beginning with +.</small>
+          </div>
+          <label className="field-label"><span><Mail aria-hidden="true" /> Email address <em>Optional</em></span><input type="email" autoComplete="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="you@example.com" /></label>
           <label className="honeypot" aria-hidden="true">Website<input tabIndex={-1} autoComplete="off" value={form.website} onChange={(e) => update("website", e.target.value)} /></label>
         </fieldset>
       )}
 
       {step === 2 && (
         <fieldset>
-          <legend>Where do you get stuck?</legend>
-          <div className="question-group"><h4>Your English level</h4><div className="choice-list">
+          <legend><span ref={headingRef} tabIndex={-1}>Where do you get stuck?</span></legend>
+          <div className="question-group"><h4>Which best describes your English?</h4><div className="choice-list">
             {levels.map((option) => <Choice key={option} type="radio" name="level" value={option} checked={form.level === option} onChange={() => update("level", option)} />)}
           </div></div>
-          <div className="question-group"><h4>Your challenges</h4><p className="select-hint">Select all that apply.</p><div className="choice-list compact">
+          <div className="question-group"><h4>What would you like help with?</h4><p className="select-hint">Select all that apply.</p><div className="choice-list compact">
             {challenges.map((option) => <Choice key={option} type="checkbox" name="challenges" value={option} checked={form.challenges.includes(option)} onChange={() => toggleChallenge(option)} />)}
           </div></div>
-        </fieldset>
-      )}
-
-      {step === 3 && (
-        <fieldset>
-          <legend>Ready to give it a go?</legend>
-          <div className="question-group"><h4>How eager are you to improve?</h4><div className="choice-list">
-            {eagernessOptions.map((option) => <Choice key={option} type="radio" name="eagerness" value={option} checked={form.eagerness === option} onChange={() => update("eagerness", option)} />)}
-          </div></div>
-          <div className="summary-card">
-            <div className="summary-title"><strong>Your enquiry</strong><button type="button" onClick={() => setStep(1)}>Edit answers</button></div>
-            <dl><div><dt>Name</dt><dd>{form.name}</dd></div><div><dt>Level</dt><dd>{form.level}</dd></div><div><dt>Challenges</dt><dd>{form.challenges.join(", ")}</dd></div></dl>
-          </div>
-          <p className="consent">We’ll save your details and contact you about the program. On WhatsApp, tap Send to share your answers. This is an enquiry, not a payment or confirmed enrolment.</p>
+          <p className="submission-note">We’ll save your enquiry first. WhatsApp will then open with your answers ready—tap Send to share them with our team.</p>
+          <p className="privacy-note">We’ll use your details to respond to your enquiry about the program.</p>
         </fieldset>
       )}
 
       <div className="form-error" role="alert" aria-live="assertive">{error}</div>
       <div className="form-actions">
-        {step > 1 && <button className="button button-back" type="button" onClick={() => { setStep(step - 1); setError(""); }}><ArrowLeft aria-hidden="true" /> Back</button>}
-        {step < 3 ? <button className="button button-primary" type="button" onClick={() => continueTo(step + 1)}>Continue <span aria-hidden="true">→</span></button>
-          : <button className="button button-primary submit-button" type="button" onClick={submit} disabled={submitting}>{submitting ? "Saving your enquiry…" : "Submit & chat on WhatsApp"}</button>}
+        {step === 2 && <button className="button button-back" type="button" onClick={() => { setStep(1); setError(""); }}><ArrowLeft aria-hidden="true" /> Back</button>}
+        {step === 1 ? <button className="button button-primary" type="button" onClick={continueToStepTwo}>Continue <span aria-hidden="true">→</span></button>
+          : <button className="button button-primary submit-button" type="button" onClick={submit} disabled={submitting}>{submitting ? "Saving your enquiry…" : "Submit & Chat on WhatsApp →"}</button>}
       </div>
     </form>
   );

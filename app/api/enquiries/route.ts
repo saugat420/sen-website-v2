@@ -1,36 +1,28 @@
 import { z } from "zod";
 
 const levels = [
-  "Beginner — I know a few words.",
-  "Basic — I can make simple sentences.",
-  "Intermediate — I understand, but struggle to speak.",
-  "Confident — I want to become more fluent.",
+  "I know a few words.",
+  "I can make simple sentences.",
+  "I understand English, but struggle to speak.",
+  "I can speak, but want to improve.",
 ] as const;
 
 const challengeOptions = [
-  "My mind goes blank.",
-  "I translate in my head.",
-  "I worry about mistakes.",
-  "I struggle to find words.",
-  "I lack confidence.",
-  "I need more speaking practice.",
-  "I struggle with pronunciation.",
-] as const;
-
-const eagernessOptions = [
-  "Just exploring my options.",
-  "Ready to make time for daily practice.",
-  "Very eager — I want to start soon.",
+  "Finding the right words.",
+  "Speaking without translating.",
+  "Feeling confident.",
+  "Pronunciation.",
+  "Everyday conversations.",
+  "Speaking at work.",
 ] as const;
 
 const enquirySchema = z.object({
   enquiryId: z.string().min(16).max(80).regex(/^[a-zA-Z0-9-]+$/),
   name: z.string().trim().min(2).max(100),
-  email: z.string().trim().email().max(180),
+  email: z.string().trim().max(180).refine((value) => !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)),
   phone: z.string().trim().transform((value) => value.replace(/[\s()-]/g, "")).pipe(z.string().regex(/^\+[1-9]\d{7,14}$/)),
   level: z.enum(levels),
   challenges: z.array(z.enum(challengeOptions)).min(1).max(challengeOptions.length),
-  eagerness: z.enum(eagernessOptions),
   website: z.string().max(0),
   formStartedAt: z.number().int().positive(),
 });
@@ -66,7 +58,7 @@ export async function POST(request: Request) {
     whatsappNumber: safeCell(payload.phone),
     englishLevel: safeCell(payload.level),
     selectedChallenges: safeCell(payload.challenges.join("; ")),
-    eagernessToImprove: safeCell(payload.eagerness),
+    eagernessToImprove: "",
   };
 
   try {
@@ -82,10 +74,16 @@ export async function POST(request: Request) {
     if (!confirmation.ok || confirmation.enquiryId !== payload.enquiryId) throw new Error("Spreadsheet receiver did not confirm the saved enquiry");
 
     const message = [
-      "Hello Spoken English Nepal! I would like to know more about the English Fluency Launchpad.", "",
-      `Name: ${payload.name}`, `Email: ${payload.email}`, `WhatsApp: ${payload.phone}`,
-      `English level: ${payload.level}`, `Challenges: ${payload.challenges.join(", ")}`, `Eagerness: ${payload.eagerness}`, "",
-      "Please share the fees, class timings, and next batch details.",
+      "Hello Spoken English Nepal,",
+      "I’d like to know more about English Fluency Launchpad.",
+      "",
+      `Name: ${payload.name}`,
+      `WhatsApp: ${payload.phone}`,
+      ...(payload.email ? [`Email: ${payload.email}`] : []),
+      `English level: ${payload.level}`,
+      `What I need help with: ${payload.challenges.join(", ")}`,
+      "",
+      "Please share the program fee, available timings and next steps.",
     ].join("\n");
 
     return Response.json({ ok: true, enquiryId: payload.enquiryId, whatsappUrl: `https://wa.me/${supportNumber}?text=${encodeURIComponent(message)}` });

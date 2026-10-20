@@ -6,12 +6,12 @@ export const metadata: Metadata = {
   title: "Spoken English Nepal | English Fluency Launchpad",
   description: "Build your English confidence with daily live classes, speaking practice, and assignments in a focused two-month program.",
   openGraph: {
-    title: "Stop getting stuck. Start speaking.",
-    description: "Explore the two-month English Fluency Launchpad from Spoken English Nepal.",
+    title: "Understand English, but struggle to speak?",
+    description: "Explore a two-month program with daily live classes and guided English speaking practice.",
     type: "website",
     images: [{ url: "/sen-logo.png", width: 225, height: 225, alt: "Spoken English Nepal" }],
   },
-  twitter: { card: "summary", title: "Spoken English Nepal", description: "Stop getting stuck. Start speaking." },
+  twitter: { card: "summary", title: "Spoken English Nepal", description: "Build confidence through daily live classes and guided speaking practice." },
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
